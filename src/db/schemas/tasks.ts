@@ -1,23 +1,17 @@
-import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { generateRandomDomainId } from "@/utils/id";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const tasks = pgTable("tasks", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+//   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  id: text("id").primaryKey().notNull().$defaultFn(() => generateRandomDomainId("tsk")),
   name: text("name").notNull(),
   done: boolean("done").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
-export const selectTasksSchema = createSelectSchema(tasks).openapi("Task", {
-  example: {
-    id: 1,
-    name: "Learn vitest",
-    done: false,
-    createdAt: new Date("2023-01-01T00:00:00Z"),
-    updatedAt: new Date("2023-01-01T00:00:00Z"),
-  },
-});
+export const selectTasksSchema = createSelectSchema(tasks);
 
 export const insertTasksSchema = createInsertSchema(
   tasks,

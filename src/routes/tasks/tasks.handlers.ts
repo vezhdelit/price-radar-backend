@@ -5,14 +5,14 @@ import * as HttpStatusPhrases from "stoker/http-status-phrases";
 import type { AppRouteHandler } from "@/lib/types";
 
 import db from "@/db";
-import { tasks } from "@/db/schema";
+import { tasks } from "@/db/schemas/tasks";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 
 import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } from "./tasks.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
-  const tasks = await db.query.tasks.findMany();
-  return c.json(tasks);
+  const list = await db.select().from(tasks)
+  return c.json(list);
 };
 
 export const create: AppRouteHandler<CreateRoute> = async (c) => {
