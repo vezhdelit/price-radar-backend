@@ -1,6 +1,7 @@
-import { generateRandomDomainId } from "@/utils/id";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+
+import { generateRandomDomainId } from "@/utils/id";
 
 export const tasks = pgTable("tasks", {
 //   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
