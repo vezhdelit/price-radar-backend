@@ -18,8 +18,8 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1(hono@4.7.7)
       '@hono/zod-openapi':
-        specifier: ^0.18.4
-        version: 0.18.4(hono@4.7.7)(zod@3.24.3)
+        specifier: ^0.19.5
+        version: 0.19.5(hono@4.7.7)(zod@3.24.3)
       '@scalar/hono-api-reference':
         specifier: ^0.8.5
         version: 0.8.5(hono@4.7.7)
@@ -64,7 +64,7 @@ importers:
         version: 3.4.5
       stoker:
         specifier: 1.4.2
-        version: 1.4.2(@asteasolutions/zod-to-openapi@7.3.0(zod@3.24.3))(@hono/zod-openapi@0.18.4(hono@4.7.7)(zod@3.24.3))(hono@4.7.7)(openapi3-ts@4.4.0)
+        version: 1.4.2(@asteasolutions/zod-to-openapi@7.3.0(zod@3.24.3))(@hono/zod-openapi@0.19.5(hono@4.7.7)(zod@3.24.3))(hono@4.7.7)(openapi3-ts@4.4.0)
       zod:
         specifier: ^3.24.3
         version: 3.24.3
@@ -880,8 +880,8 @@ packages:
     peerDependencies:
       hono: '*'
 
-  '@hono/zod-openapi@0.18.4':
-    resolution: {integrity: sha512-6NHMHU96Hh32B1yDhb94Z4Z5/POsmEu2AXpWLWcBq9arskRnOMt2752yEoXoADV8WUAc7H1IkNaQHGj1ytXbYw==}
+  '@hono/zod-openapi@0.19.5':
+    resolution: {integrity: sha512-n2RqdZL7XIaWPwBNygctG/1eySyRtSBnS7l+pIsP3f2JW5P2l7Smm6SLluscrGwB5l2C2fxbfvhWoC6Ig+SxXw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       hono: '>=4.3.6'
@@ -4001,7 +4001,7 @@ snapshots:
     dependencies:
       hono: 4.7.7
 
-  '@hono/zod-openapi@0.18.4(hono@4.7.7)(zod@3.24.3)':
+  '@hono/zod-openapi@0.19.5(hono@4.7.7)(zod@3.24.3)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.3.0(zod@3.24.3)
       '@hono/zod-validator': 0.4.3(hono@4.7.7)(zod@3.24.3)
@@ -6524,13 +6524,13 @@ snapshots:
 
   std-env@3.9.0: {}
 
-  stoker@1.4.2(@asteasolutions/zod-to-openapi@7.3.0(zod@3.24.3))(@hono/zod-openapi@0.18.4(hono@4.7.7)(zod@3.24.3))(hono@4.7.7)(openapi3-ts@4.4.0):
+  stoker@1.4.2(@asteasolutions/zod-to-openapi@7.3.0(zod@3.24.3))(@hono/zod-openapi@0.19.5(hono@4.7.7)(zod@3.24.3))(hono@4.7.7)(openapi3-ts@4.4.0):
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.3.0(zod@3.24.3)
       hono: 4.7.7
       openapi3-ts: 4.4.0
     optionalDependencies:
-      '@hono/zod-openapi': 0.18.4(hono@4.7.7)(zod@3.24.3)
+      '@hono/zod-openapi': 0.19.5(hono@4.7.7)(zod@3.24.3)
 
   string-width@4.2.3:
     dependencies:

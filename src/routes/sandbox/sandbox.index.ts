@@ -1,9 +1,9 @@
-import { Hono } from "hono";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
+import { createRouter } from "@/lib/create-app";
 import { generateRandomDomainId } from "@/utils/id";
 
-const router = new Hono().get("/api/sandbox", async (c) => {
+const router = createRouter().get("/api/sandbox", async (c) => {
   generateRandomDomainId("test");
   return c.json(
     {
