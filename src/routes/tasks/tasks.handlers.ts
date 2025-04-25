@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
@@ -11,21 +11,28 @@ import { tasks } from "@/db/schemas/tasks";
 import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } from "./tasks.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
-  const list = await db.select().from(tasks);
+  const user = c.get("user")!;
+  const list = await db.select().from(tasks).where(eq(tasks.userId, user.id));
   return c.json(list);
 };
 
 export const create: AppRouteHandler<CreateRoute> = async (c) => {
+  const user = c.get("user")!;
   const task = c.req.valid("json");
-  const [inserted] = await db.insert(tasks).values(task).returning();
+  const taskToInsert = {
+    ...task,
+    userId: user.id,
+  };
+  const [inserted] = await db.insert(tasks).values(taskToInsert).returning();
   return c.json(inserted, HttpStatusCodes.OK);
 };
 
 export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
+  const user = c.get("user")!;
   const { id } = c.req.valid("param");
   const task = await db.query.tasks.findFirst({
     where(fields, operators) {
-      return operators.eq(fields.id, id);
+      return operators.eq(fields.id, id) && operators.eq(fields.userId, user.id);
     },
   });
 
@@ -42,6 +49,7 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
 };
 
 export const patch: AppRouteHandler<PatchRoute> = async (c) => {
+  const user = c.get("user")!;
   const { id } = c.req.valid("param");
   const updates = c.req.valid("json");
 
@@ -66,7 +74,7 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 
   const [updated] = await db.update(tasks)
     .set(updates)
-    .where(eq(tasks.id, id))
+    .where(and(eq(tasks.id, id), eq(tasks.userId, user.id)))
     .returning();
 
   if (!updated) {
@@ -82,8 +90,14 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 };
 
 export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
+  const user = c.get("user")!;
   const { id } = c.req.valid("param");
-  const [deleted] = await db.delete(tasks).where(eq(tasks.id, id)).returning();
+  const [deleted] = await db.delete(tasks).where(
+    and(
+      eq(tasks.id, id),
+      eq(tasks.userId, user.id),
+    ),
+  ).returning();
 
   if (!deleted) {
     return c.json(

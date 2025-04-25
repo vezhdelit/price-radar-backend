@@ -3,6 +3,8 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 import { generateRandomDomainId } from "@/utils/id";
 
+import { users } from "./users";
+
 export const tasks = pgTable("tasks", {
 //   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   id: text("id").primaryKey().notNull().$defaultFn(() => generateRandomDomainId("tsk")),
@@ -10,6 +12,7 @@ export const tasks = pgTable("tasks", {
   done: boolean("done").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().$onUpdate(() => new Date()),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
 });
 
 export const selectTasksSchema = createSelectSchema(tasks);
@@ -22,6 +25,7 @@ export const insertTasksSchema = createInsertSchema(
 ).required({
   done: true,
 }).omit({
+  userId: true, // userId is set by the server
   id: true,
   createdAt: true,
   updatedAt: true,

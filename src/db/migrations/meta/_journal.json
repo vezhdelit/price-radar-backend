@@ -64,6 +64,13 @@
       "when": 1745535386065,
       "tag": "0008_elite_hellfire_club",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1745619839878,
+      "tag": "0009_closed_korath",
+      "breakpoints": true
     }
   ]
 }
