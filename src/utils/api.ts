@@ -1,3 +1,5 @@
+import * as HttpStatusPhrases from "stoker/http-status-phrases";
+import { createMessageObjectSchema } from "stoker/openapi/schemas";
 import { z } from "zod";
 
 export const IdParamsSchema = z.object({
@@ -34,3 +36,5 @@ export function getDomainIdParamsSchema(domain: string) {
     }),
   });
 }
+
+export const notFoundSchema = createMessageObjectSchema(HttpStatusPhrases.NOT_FOUND);

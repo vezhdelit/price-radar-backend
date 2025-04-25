@@ -2,16 +2,16 @@ import { eq } from "drizzle-orm";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
-import type { AppRouteHandler } from "@/lib/types";
+import type { AppRouteHandler } from "@/types/hono";
 
+import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/constants/zod";
 import db from "@/db";
 import { tasks } from "@/db/schemas/tasks";
-import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 
 import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } from "./tasks.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
-  const list = await db.select().from(tasks)
+  const list = await db.select().from(tasks);
   return c.json(list);
 };
 

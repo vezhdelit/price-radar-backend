@@ -19,6 +19,8 @@
     "@hono/zod-openapi": "^0.18.4",
     "@libsql/client": "^0.14.0",
     "@scalar/hono-api-reference": "^0.5.184",
+    "better-auth": "^1.2.7",
+    "deepmerge": "^4.3.1",
     "dotenv": "^16.5.0",
     "dotenv-expand": "^12.0.2",
     "drizzle-orm": "^0.33.0",

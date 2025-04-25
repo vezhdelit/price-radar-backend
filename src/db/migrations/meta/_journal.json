@@ -29,6 +29,41 @@
       "when": 1745529148289,
       "tag": "0003_lowly_timeslip",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1745531109941,
+      "tag": "0004_sticky_frog_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1745535032617,
+      "tag": "0005_burly_yellowjacket",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1745535039858,
+      "tag": "0006_late_demogoblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1745535379888,
+      "tag": "0007_flat_rumiko_fujikawa",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1745535386065,
+      "tag": "0008_elite_hellfire_club",
+      "breakpoints": true
     }
   ]
 }

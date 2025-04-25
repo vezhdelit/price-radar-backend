@@ -1,16 +1,15 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
-import { createErrorSchema} from "stoker/openapi/schemas";
+import { createErrorSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schemas/tasks";
-import { notFoundSchema } from "@/lib/constants";
-import { getDomainIdParamsSchema } from "@/utils/api";
+import { getDomainIdParamsSchema, notFoundSchema } from "@/utils/api";
 
 const tags = ["Tasks"];
 
 export const list = createRoute({
-  path: "/tasks",
+  path: "/api/tasks",
   method: "get",
   tags,
   responses: {
@@ -22,7 +21,7 @@ export const list = createRoute({
 });
 
 export const create = createRoute({
-  path: "/tasks",
+  path: "/api/tasks",
   method: "post",
   request: {
     body: jsonContentRequired(
@@ -44,7 +43,7 @@ export const create = createRoute({
 });
 
 export const getOne = createRoute({
-  path: "/tasks/{id}",
+  path: "/api/tasks/{id}",
   method: "get",
   request: {
     params: getDomainIdParamsSchema("tsk"),
@@ -67,7 +66,7 @@ export const getOne = createRoute({
 });
 
 export const patch = createRoute({
-  path: "/tasks/{id}",
+  path: "/api/tasks/{id}",
   method: "patch",
   request: {
     params: getDomainIdParamsSchema("tsk"),
@@ -95,7 +94,7 @@ export const patch = createRoute({
 });
 
 export const remove = createRoute({
-  path: "/tasks/{id}",
+  path: "/api/tasks/{id}",
   method: "delete",
   request: {
     params: getDomainIdParamsSchema("tsk"),

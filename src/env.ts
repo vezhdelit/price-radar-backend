@@ -22,6 +22,12 @@ const EnvSchema = z.object({
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]),
   DATABASE_URL: z.string().url(),
 
+  BETTER_AUTH_SECRET: z.string().min(1),
+  BETTER_AUTH_URL: z.string().url().optional(),
+
+  GITHUB_CLIENT_ID: z.string(),
+  GITHUB_CLIENT_SECRET: z.string(),
+
   HEADLESS: z.coerce.boolean().default(false),
   BROWSER_TYPE: z.enum(["default", "configured", "executable"]).default("default"),
 
