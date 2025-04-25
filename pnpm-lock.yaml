@@ -21,8 +21,8 @@ importers:
         specifier: ^0.18.4
         version: 0.18.4(hono@4.7.7)(zod@3.24.3)
       '@scalar/hono-api-reference':
-        specifier: ^0.5.184
-        version: 0.5.184(hono@4.7.7)
+        specifier: ^0.8.5
+        version: 0.8.5(hono@4.7.7)
       better-auth:
         specifier: ^1.2.7
         version: 1.2.7
@@ -1123,22 +1123,22 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@scalar/core@0.1.1':
-    resolution: {integrity: sha512-7qnZp8ykrXoKScFIZcwt638CuFFyj7G3SsgVfD5liNgb533K8/lhWqdmp1vK2u4BKKJ9GBAPKMlWZE/+yA8WTw==}
+  '@scalar/core@0.2.11':
+    resolution: {integrity: sha512-crakGk7IOWEvlexKdxr+uLW+SzvE/9OLZMYGHn0GNop3jSsHqZRB7a4epZ6MzmOP6L2665M4q8g1IuTKBudYVw==}
     engines: {node: '>=18'}
 
-  '@scalar/hono-api-reference@0.5.184':
-    resolution: {integrity: sha512-vRSRwJkN1Xo5dW9KYQJlGpKZ+Nh9qH+x1sn0qf6/Lx8QLPyyEpNm1EEddKaIN6qd5wrtVjDN6adQhfAfcYGHzw==}
+  '@scalar/hono-api-reference@0.8.5':
+    resolution: {integrity: sha512-s9jmP7wQnXNvGR/pFyUxc1BDb7YMbLHJY7czqbMouBjNOhaeutipg2RioiViLOPdyLUoJWeUDxL7h4fUxcZMoA==}
     engines: {node: '>=18'}
     peerDependencies:
       hono: ^4.0.0
 
-  '@scalar/openapi-types@0.1.9':
-    resolution: {integrity: sha512-HQQudOSQBU7ewzfnBW9LhDmBE2XOJgSfwrh5PlUB7zJup/kaRkBGNgV2wMjNz9Af/uztiU/xNrO179FysmUT+g==}
+  '@scalar/openapi-types@0.2.1':
+    resolution: {integrity: sha512-UMxX54taQXnEWYEuesbH+pkjlXRVV1u/Wx6YbVeU3QoJdFGqT3Z7si9zsokoG6MXDcdi1LGny7A0KwownmPvUQ==}
     engines: {node: '>=18'}
 
-  '@scalar/types@0.0.40':
-    resolution: {integrity: sha512-0J6o+yZzgZEvl3KhvLTAGiXXyrCeEPKvs9gUWQDf1Rb5NfFxF0lA10ougCQCwVJIguWNEzZfOUiSoAFzGy2EqQ==}
+  '@scalar/types@0.1.11':
+    resolution: {integrity: sha512-fNcaZbZKoZ2PvoW+KJHmk4au8ZukgWlb6qLK3k/SLkfsTggN3DO4PR57ch6cyl2WhwENNbw+iI+ss7fTRcPnOA==}
     engines: {node: '>=18'}
 
   '@simplewebauthn/browser@13.1.0':
@@ -1189,6 +1189,9 @@ packages:
 
   '@types/node@22.14.1':
     resolution: {integrity: sha512-u0HuPQwe/dHrItgHHpmw3N2fYCR6x4ivMNbPHRkBVP4CvN+kiRrKHWk3i8tXiO/joPwXLMYvF9TTF0eqgHIuOw==}
+
+  '@types/node@22.15.2':
+    resolution: {integrity: sha512-uKXqKN9beGoMdBfcaTY1ecwz6ctxuJAcUlwE55938g0ZJ8lRxwAZqRz2AJ4pzpt5dHdTPMB863UZ0ESiFUcP7A==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -1672,8 +1675,8 @@ packages:
     resolution: {integrity: sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==}
     engines: {node: '>=8'}
 
-  detect-libc@2.0.3:
-    resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
+  detect-libc@2.0.4:
+    resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
 
   devlop@1.1.0:
@@ -2448,6 +2451,7 @@ packages:
 
   libsql@0.4.7:
     resolution: {integrity: sha512-T9eIRCs6b0J1SHKYIvD8+KCJMcWZ900iZyxdnSCdqxN12Z1ijzT+jY5nrk72Jw4B0HGzms2NgpryArlJqvc3Lw==}
+    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lines-and-columns@1.2.4:
@@ -2664,6 +2668,11 @@ packages:
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
+  nanoid@5.1.5:
+    resolution: {integrity: sha512-Ir/+ZpE9fDsNH0hQ3C68uyThDXzYcim2EqcZ8zn8Chtt1iylPT9xXJB0kPCnqzgcEGikO9RxSrh63MsmVCU7Fw==}
+    engines: {node: ^18 || >=20}
     hasBin: true
 
   nanostores@0.11.4:
@@ -3218,6 +3227,10 @@ packages:
   type-fest@0.8.1:
     resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==}
     engines: {node: '>=8'}
+
+  type-fest@4.40.0:
+    resolution: {integrity: sha512-ABHZ2/tS2JkvH1PEjxFDTUWC8dB5OsIGZP4IFLhR293GqT5Y5qB1WwL2kMPYhQW9DVgVD8Hd7I8gjwPIf5GFkw==}
+    engines: {node: '>=16'}
 
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
@@ -4205,21 +4218,25 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.40.0':
     optional: true
 
-  '@scalar/core@0.1.1':
+  '@scalar/core@0.2.11':
     dependencies:
-      '@scalar/types': 0.0.40
+      '@scalar/types': 0.1.11
 
-  '@scalar/hono-api-reference@0.5.184(hono@4.7.7)':
+  '@scalar/hono-api-reference@0.8.5(hono@4.7.7)':
     dependencies:
-      '@scalar/core': 0.1.1
+      '@scalar/core': 0.2.11
       hono: 4.7.7
 
-  '@scalar/openapi-types@0.1.9': {}
-
-  '@scalar/types@0.0.40':
+  '@scalar/openapi-types@0.2.1':
     dependencies:
-      '@scalar/openapi-types': 0.1.9
+      zod: 3.24.3
+
+  '@scalar/types@0.1.11':
+    dependencies:
+      '@scalar/openapi-types': 0.2.1
       '@unhead/schema': 1.11.20
+      nanoid: 5.1.5
+      type-fest: 4.40.0
       zod: 3.24.3
 
   '@simplewebauthn/browser@13.1.0': {}
@@ -4253,7 +4270,7 @@ snapshots:
 
   '@types/better-sqlite3@7.6.11':
     dependencies:
-      '@types/node': 22.14.1
+      '@types/node': 22.15.2
     optional: true
 
   '@types/debug@4.1.12':
@@ -4290,13 +4307,18 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/node@22.15.2':
+    dependencies:
+      undici-types: 6.21.0
+    optional: true
+
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/unist@3.0.3': {}
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 22.14.1
+      '@types/node': 22.15.2
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.31.0(@typescript-eslint/parser@8.31.0(eslint@9.25.1)(typescript@5.8.3))(eslint@9.25.1)(typescript@5.8.3)':
@@ -4782,7 +4804,7 @@ snapshots:
   detect-libc@2.0.2:
     optional: true
 
-  detect-libc@2.0.3:
+  detect-libc@2.0.4:
     optional: true
 
   devlop@1.1.0:
@@ -6060,6 +6082,8 @@ snapshots:
 
   nanoid@3.3.11: {}
 
+  nanoid@5.1.5: {}
+
   nanostores@0.11.4: {}
 
   napi-build-utils@2.0.0:
@@ -6275,7 +6299,7 @@ snapshots:
 
   prebuild-install@7.1.3:
     dependencies:
-      detect-libc: 2.0.3
+      detect-libc: 2.0.4
       expand-template: 2.0.3
       github-from-package: 0.0.0
       minimist: 1.2.8
@@ -6628,6 +6652,8 @@ snapshots:
   type-fest@0.6.0: {}
 
   type-fest@0.8.1: {}
+
+  type-fest@4.40.0: {}
 
   typescript@5.8.3: {}
 

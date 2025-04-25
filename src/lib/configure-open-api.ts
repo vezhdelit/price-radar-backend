@@ -1,5 +1,5 @@
 import { swaggerUI } from "@hono/swagger-ui";
-import { apiReference } from "@scalar/hono-api-reference";
+import { Scalar } from "@scalar/hono-api-reference";
 import deepmerge from "deepmerge";
 
 import type { AppOpenAPI } from "@/types/hono";
@@ -90,16 +90,14 @@ export default function configureOpenAPI(app: AppOpenAPI) {
 
   app.get(
     "/docs",
-    apiReference({
-      theme: "alternate",
+    Scalar({
+      theme: "fastify",
       hideDownloadButton: true,
       defaultHttpClient: {
         targetKey: "js",
         clientKey: "axios",
       },
-      spec: {
-        url: "/openapi",
-      },
+      url: "/openapi",
       layout: "modern",
       pageTitle: "Tasks API",
     }),
