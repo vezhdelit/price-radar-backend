@@ -7,40 +7,53 @@ import type { AppOpenAPI } from "@/types/hono";
 import packageJSON from "../../package.json" with { type: "json" };
 import { auth } from "./auth";
 
-function changeOpenAPISchemaTags(openAPISchema: any, tag: string) {
-  // Change the tag for all paths endpoints to "Auth"
-  for (const path in openAPISchema.paths) {
-    const methods = openAPISchema.paths[path] as Record<string, { tags?: string[] }>;
-    for (const method in methods) {
-      const methodDetails = methods[method];
-      if (methodDetails && Array.isArray(methodDetails.tags)) {
-        methodDetails.tags = [tag];
-      }
-    }
-  }
-
-  // Update the tags definition to reflect the change
-  openAPISchema.tags = [{ name: tag, description: "Authentication endpoints" }];
-
-  return openAPISchema;
+interface PathConfig {
+  tags?: string[];
+  exclude?: boolean;
 }
 
-function addBasePathToOpenAPISchema(openAPISchema: any, basePath: string) {
+function processAuthOpenAPISchema(openAPISchema: any, pathConfigurations: Record<string, PathConfig>) {
   const newPaths: Record<string, any> = {};
-  for (const path in openAPISchema.paths) {
-    newPaths[`${basePath}${path}`] = openAPISchema.paths[path];
-  }
-  openAPISchema.paths = newPaths;
+  const tags: Record<string, { name: string; description: string }> = {};
+  const orderedTags: string[] = [
+    "Registration",
+    "Auth & Sessions",
+    "Password Management",
+    "Account Management",
+    "Accounts", // Keep "Accounts" as it was
+  ];
 
-  // Update server URLs if they don't already include the basePath
-  if (openAPISchema.servers && Array.isArray(openAPISchema.servers)) {
-    openAPISchema.servers = openAPISchema.servers.map((server: { url: string }) => {
-      if (!server.url.endsWith(basePath)) {
-        server.url = `${server.url}${basePath}`;
+  for (const path in openAPISchema.paths) {
+    const config = pathConfigurations[path];
+
+    if (config?.exclude) {
+      continue; // Skip excluded paths
+    }
+
+    const methods = openAPISchema.paths[path] as Record<string, { tags?: string[] }>;
+    const assignedTags = config?.tags || ["Auth"]; // Default to "Auth" if no specific tags
+
+    for (const method in methods) {
+      const methodDetails = methods[method];
+      if (methodDetails) {
+        methodDetails.tags = assignedTags;
+        assignedTags.forEach((tag) => {
+          if (!tags[tag]) {
+            tags[tag] = { name: tag, description: `${tag} related operations` };
+          }
+        });
       }
-      return server;
-    });
+    }
+
+    newPaths[`/api/auth${path}`] = openAPISchema.paths[path];
   }
+
+  openAPISchema.paths = newPaths;
+  // Order the tags based on the orderedTags array
+  openAPISchema.tags = orderedTags
+    .map(tagName => tags[tagName])
+    .filter(tag => !!tag); // Filter out any tags that might not have been used
+  openAPISchema.servers = []; // Remove auth server URLs as they are now under /api/auth
 
   return openAPISchema;
 }
@@ -75,11 +88,46 @@ export default function configureOpenAPI(app: AppOpenAPI) {
 
     let authOpenAPISchema = await auth.api.generateOpenAPISchema();
 
-    authOpenAPISchema = changeOpenAPISchemaTags(authOpenAPISchema, "Auth");
-    authOpenAPISchema = addBasePathToOpenAPISchema(authOpenAPISchema, "/api/auth");
-    authOpenAPISchema.servers = [];
+    const pathConfigurations: Record<string, PathConfig> = {
+      // Registration
+      "/sign-up/email": { tags: ["Registration"] },
+      "/verify-email": { tags: ["Registration"] },
+      "/send-verification-email": { tags: ["Registration"] },
 
-    const mergedOpenAPISchema = deepmerge(openAPISchema, authOpenAPISchema);
+      // Auth & Sessions
+      "/sign-in/email": { tags: ["Auth & Sessions"] },
+      "/sign-in/social": { tags: ["Auth & Sessions"] },
+      "/get-session": { tags: ["Auth & Sessions"] },
+      "/refresh-token": { tags: ["Auth & Sessions"] },
+      "/list-sessions": { tags: ["Auth & Sessions"] },
+      "/revoke-session": { tags: ["Auth & Sessions"] },
+      "/revoke-sessions": { tags: ["Auth & Sessions"] },
+      "/revoke-other-sessions": { tags: ["Auth & Sessions"] },
+      "/sign-out": { tags: ["Auth & Sessions"] },
+
+      // Password Management
+      "/forget-password": { tags: ["Password Management"] },
+      "/reset-password": { tags: ["Password Management"] },
+      "/reset-password/{token}": { tags: ["Password Management"] },
+
+      // Account Management
+      "/change-email": { tags: ["Account Management"] },
+      "/change-password": { tags: ["Account Management"] },
+      "/update-user": { tags: ["Account Management"] },
+      "/delete-user": { tags: ["Account Management"] },
+      "/list-accounts": { tags: ["Account Management"] },
+      "/unlink-account": { tags: ["Account Management"] },
+      "/link-social": { tags: ["Account Management"] },
+
+      // Excluded
+      "/delete-user/callback": { exclude: true },
+      "/ok": { exclude: true },
+      "/error": { exclude: true },
+    };
+
+    authOpenAPISchema = processAuthOpenAPISchema(authOpenAPISchema, pathConfigurations);
+
+    const mergedOpenAPISchema = deepmerge(authOpenAPISchema, openAPISchema);
 
     return c.json(mergedOpenAPISchema, 200);
   });

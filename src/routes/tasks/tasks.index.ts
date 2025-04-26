@@ -7,8 +7,7 @@ import * as routes from "./tasks.routes";
 const router = createRouter();
 
 router.use(protect);
-router
-  .openapi(routes.list, handlers.list);
+router.openapi(routes.list, handlers.list);
 router.openapi(routes.create, handlers.create);
 router.openapi(routes.getOne, handlers.getOne);
 router.openapi(routes.patch, handlers.patch);

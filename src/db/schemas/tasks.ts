@@ -6,7 +6,7 @@ import { generateRandomDomainId } from "@/utils/id";
 import { users } from "./users";
 
 export const tasks = pgTable("tasks", {
-//   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  //   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   id: text("id").primaryKey().notNull().$defaultFn(() => generateRandomDomainId("tsk")),
   name: text("name").notNull(),
   done: boolean("done").notNull().default(false),
@@ -15,7 +15,9 @@ export const tasks = pgTable("tasks", {
   userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
 });
 
-export const selectTasksSchema = createSelectSchema(tasks);
+const selectTasksSchema = createSelectSchema(tasks);
+
+export { selectTasksSchema };
 
 export const insertTasksSchema = createInsertSchema(
   tasks,

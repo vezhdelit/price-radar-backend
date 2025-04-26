@@ -1,10 +1,8 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import * as HttpStatusCodes from "stoker/http-status-codes";
-import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
-import { createErrorSchema } from "stoker/openapi/schemas";
 
+import { HTTP_STATUS_CODES } from "@/constants/http-status";
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schemas/tasks";
-import { getDomainIdParamsSchema, notFoundSchema } from "@/utils/api";
+import { createErrorSchema, getDomainIdParamsSchema, jsonContent, jsonContentRequired, notFoundSchema } from "@/utils/api";
 
 const tags = ["Tasks"];
 
@@ -13,8 +11,10 @@ export const list = createRoute({
   method: "get",
   tags,
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
-      z.array(selectTasksSchema),
+    [HTTP_STATUS_CODES.OK]: jsonContent(
+      z.array(selectTasksSchema.openapi("Task", {
+        required: [],
+      })),
       "The list of tasks",
     ),
   },
@@ -31,11 +31,11 @@ export const create = createRoute({
   },
   tags,
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
+    [HTTP_STATUS_CODES.OK]: jsonContent(
       selectTasksSchema,
       "The created task",
     ),
-    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+    [HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(insertTasksSchema),
       "The validation error(s)",
     ),
@@ -50,15 +50,15 @@ export const getOne = createRoute({
   },
   tags,
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
+    [HTTP_STATUS_CODES.OK]: jsonContent(
       selectTasksSchema,
       "The requested task",
     ),
-    [HttpStatusCodes.NOT_FOUND]: jsonContent(
+    [HTTP_STATUS_CODES.NOT_FOUND]: jsonContent(
       notFoundSchema,
       "Task not found",
     ),
-    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+    [HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(getDomainIdParamsSchema("tsk")),
       "Invalid id error",
     ),
@@ -77,15 +77,15 @@ export const patch = createRoute({
   },
   tags,
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
+    [HTTP_STATUS_CODES.OK]: jsonContent(
       selectTasksSchema,
       "The updated task",
     ),
-    [HttpStatusCodes.NOT_FOUND]: jsonContent(
+    [HTTP_STATUS_CODES.NOT_FOUND]: jsonContent(
       notFoundSchema,
       "Task not found",
     ),
-    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+    [HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(patchTasksSchema)
         .or(createErrorSchema(getDomainIdParamsSchema("tsk"))),
       "The validation error(s)",
@@ -101,14 +101,14 @@ export const remove = createRoute({
   },
   tags,
   responses: {
-    [HttpStatusCodes.NO_CONTENT]: {
+    [HTTP_STATUS_CODES.NO_CONTENT]: {
       description: "Task deleted",
     },
-    [HttpStatusCodes.NOT_FOUND]: jsonContent(
+    [HTTP_STATUS_CODES.NOT_FOUND]: jsonContent(
       notFoundSchema,
       "Task not found",
     ),
-    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+    [HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(getDomainIdParamsSchema("tsk")),
       "Invalid id error",
     ),
