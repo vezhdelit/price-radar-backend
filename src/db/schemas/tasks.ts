@@ -15,9 +15,7 @@ export const tasks = pgTable("tasks", {
   userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
 });
 
-const selectTasksSchema = createSelectSchema(tasks);
-
-export { selectTasksSchema };
+export const selectTasksSchema = createSelectSchema(tasks);
 
 export const insertTasksSchema = createInsertSchema(
   tasks,

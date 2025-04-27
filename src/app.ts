@@ -2,6 +2,7 @@ import configureOpenAPI from "@/lib/configure-open-api";
 import createApp from "@/lib/create-app";
 import auth from "@/routes/auth/auth.index";
 import index from "@/routes/index/index.index";
+import products from "@/routes/products/products.index";
 import sandbox from "@/routes/sandbox/sandbox.index";
 import tasks from "@/routes/tasks/tasks.index";
 
@@ -13,6 +14,7 @@ const routes = [
   auth,
   index,
   sandbox,
+  products,
   tasks,
 ] as const;
 

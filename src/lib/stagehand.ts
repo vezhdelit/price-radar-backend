@@ -37,7 +37,7 @@ export function getStagehand({
   provider = PREFERRED_LLM_PROVIDER,
   model = PREFERRED_LLM_MODEL,
   browserType = BROWSER_TYPE,
-}: StagehandOptions) {
+}: StagehandOptions = {}) {
   const foundProvider = LLMS[provider as keyof typeof LLMS];
   if (!foundProvider) {
     throw new Error(`Provider ${provider} not found`);
