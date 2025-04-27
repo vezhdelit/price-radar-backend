@@ -32,11 +32,11 @@ export const selectProductsSchema = createSelectSchema(products);
 export const insertProductsSchema = createInsertSchema(
   products,
   {
-    title: schema => schema.title.min(1).max(500),
-    url: schema => schema.url.min(1).max(500),
-    description: schema => schema.description.max(5000),
-    price: schema => schema.price.min(0),
-    currency: schema => schema.currency.length(3),
+    title: schema => schema.min(1).max(100),
+    url: schema => schema.min(1).max(500),
+    description: schema => schema.max(5000),
+    price: schema => schema.min(0),
+    currency: schema => schema.length(3),
   },
 ).required({
   url: true,
