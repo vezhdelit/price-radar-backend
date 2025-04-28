@@ -5,10 +5,10 @@ import type { AppRouteHandler } from "@/types/hono";
 import { HTTP_STATUS_CODES, HTTP_STATUS_MESSAGES } from "@/constants/http-status";
 // import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/constants/zod";
 import db from "@/db";
-import { products } from "@/db/schemas";
+import { checks, products } from "@/db/schemas";
 import { checkProduct } from "@/services/checker";
 
-import type { CheckRoute, CreateRoute, GetOneRoute, ListRoute, /* PatchRoute, */ RemoveRoute } from "./products.routes";
+import type { CheckHistoryRoute, CheckRoute, CreateRoute, GetOneRoute, ListRoute, /* PatchRoute, */ RemoveRoute } from "./products.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const user = c.get("user")!;
@@ -54,6 +54,7 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
 export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
   const user = c.get("user")!;
   const { id } = c.req.valid("param");
+  c.var.logger.error(`id ${id}`);
   const product = await db.query.products.findFirst({
     where(fields, operators) {
       return operators.eq(fields.id, id) && operators.eq(fields.userId, user.id);
@@ -75,13 +76,17 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
 export const check: AppRouteHandler<CheckRoute> = async (c) => {
   const user = c.get("user")!;
   const { id } = c.req.valid("param");
-  const product = await db.query.products.findFirst({
-    where(fields, operators) {
-      return operators.eq(fields.id, id) && operators.eq(fields.userId, user.id);
-    },
-  });
+  c.var.logger.error(`Checking product: ${id}`);
+  const [selected] = await db.select().from(products).where(
+    and(
+      eq(products.id, id),
+      eq(products.userId, user.id),
+    ),
+  ).limit(1);
 
-  if (!product) {
+  c.var.logger.error(`Product: ${JSON.stringify(selected)}`);
+
+  if (!selected) {
     return c.json(
       {
         message: HTTP_STATUS_MESSAGES.NOT_FOUND,
@@ -90,7 +95,7 @@ export const check: AppRouteHandler<CheckRoute> = async (c) => {
     );
   }
 
-  const { data: check, error } = await checkProduct(product.id, product.url);
+  const { data: check, error } = await checkProduct(selected.id, selected.url);
   if (error) {
     return c.json(
       {
@@ -105,7 +110,7 @@ export const check: AppRouteHandler<CheckRoute> = async (c) => {
     imageUrl: check.imageUrl,
     price: check.price,
     currency: check.currency,
-  }).where(eq(products.id, product.id)).returning();
+  }).where(eq(products.id, selected.id)).returning();
 
   if (!altered) {
     return c.json(
@@ -120,6 +125,40 @@ export const check: AppRouteHandler<CheckRoute> = async (c) => {
     ...altered,
     checkId: check.id,
   }, HTTP_STATUS_CODES.OK);
+};
+
+export const checkHistory: AppRouteHandler<CheckHistoryRoute> = async (c) => {
+  const user = c.get("user")!;
+  const { id } = c.req.valid("param");
+
+  const product = await db.query.products.findFirst({
+    where(fields, operators) {
+      return operators.eq(fields.id, id) && operators.eq(fields.userId, user.id);
+    },
+  });
+  if (!product) {
+    return c.json(
+      {
+        message: HTTP_STATUS_MESSAGES.NOT_FOUND,
+      },
+      HTTP_STATUS_CODES.NOT_FOUND,
+    );
+  }
+
+  const selected = await db.select().from(checks).where(
+    eq(checks.productId, id),
+  );
+
+  if (!selected) {
+    return c.json(
+      {
+        message: HTTP_STATUS_MESSAGES.NOT_FOUND,
+      },
+      HTTP_STATUS_CODES.NOT_FOUND,
+    );
+  }
+
+  return c.json(selected, HTTP_STATUS_CODES.OK);
 };
 
 // export const patch: AppRouteHandler<PatchRoute> = async (c) => {
