@@ -27,7 +27,7 @@ export async function checkProduct(product_id: string, url: string): Promise<Fun
       instruction:
         "Extract the image_url, name, price and currency of the product from the page. Be sure to get discount price if product is on discount.",
       schema: z.object({
-        image_url: z.string().optional().describe("The URL of the product image"),
+        image_url: z.string().optional().nullable().describe("The URL of the product image"),
         name: z.string().describe("The name of the product"),
         price: z.number().describe("The price of the product"),
         currency: z.string().describe("The currency of the price"),
@@ -48,12 +48,13 @@ export async function checkProduct(product_id: string, url: string): Promise<Fun
       }
       currencyCode = code;
     }
+    const intPrice = Math.round(price);
 
     const checkObj: NewCheck = {
       title: name,
       productId: product_id,
       imageUrl: image_url,
-      price,
+      price: intPrice,
       currency: currencyCode,
     };
 
