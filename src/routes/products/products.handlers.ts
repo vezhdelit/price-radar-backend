@@ -54,14 +54,15 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
 export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
   const user = c.get("user")!;
   const { id } = c.req.valid("param");
-  c.var.logger.error(`id ${id}`);
-  const product = await db.query.products.findFirst({
-    where(fields, operators) {
-      return operators.eq(fields.id, id) && operators.eq(fields.userId, user.id);
-    },
-  });
 
-  if (!product) {
+  const [selected] = await db.select().from(products).where(
+    and(
+      eq(products.id, id),
+      eq(products.userId, user.id),
+    ),
+  ).limit(1);
+
+  if (!selected) {
     return c.json(
       {
         message: HTTP_STATUS_MESSAGES.NOT_FOUND,
@@ -70,7 +71,7 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
     );
   }
 
-  return c.json(product, HTTP_STATUS_CODES.OK);
+  return c.json(selected, HTTP_STATUS_CODES.OK);
 };
 
 export const check: AppRouteHandler<CheckRoute> = async (c) => {
@@ -131,11 +132,13 @@ export const checkHistory: AppRouteHandler<CheckHistoryRoute> = async (c) => {
   const user = c.get("user")!;
   const { id } = c.req.valid("param");
 
-  const product = await db.query.products.findFirst({
-    where(fields, operators) {
-      return operators.eq(fields.id, id) && operators.eq(fields.userId, user.id);
-    },
-  });
+  const [product] = await db.select().from(products).where(
+    and(
+      eq(products.id, id),
+      eq(products.userId, user.id),
+    ),
+  ).limit(1);
+
   if (!product) {
     return c.json(
       {
