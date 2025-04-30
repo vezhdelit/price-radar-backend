@@ -115,7 +115,7 @@ export default function configureOpenAPI(app: AppOpenAPI) {
     }
     servers.push(
       {
-        url: "https://api/vezhdelit.com",
+        url: "https://api.vezhdelit.com",
       },
     );
 
