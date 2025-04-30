@@ -78,10 +78,10 @@ export default function configureOpenAPI(app: AppOpenAPI) {
       },
       servers: [
         {
-          url: "http://localhost:9999",
+          url: "http://vezhdelit.com",
         },
         {
-          url: "https://api.example.com",
+          url: "http://localhost:9999",
         },
       ],
     });
