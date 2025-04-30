@@ -4,7 +4,6 @@ import auth from "@/routes/auth/auth.index";
 import index from "@/routes/index/index.index";
 import products from "@/routes/products/products.index";
 import sandbox from "@/routes/sandbox/sandbox.index";
-import tasks from "@/routes/tasks/tasks.index";
 
 const app = createApp();
 
@@ -15,7 +14,6 @@ const routes = [
   index,
   sandbox,
   products,
-  tasks,
 ] as const;
 
 routes.forEach((route) => {

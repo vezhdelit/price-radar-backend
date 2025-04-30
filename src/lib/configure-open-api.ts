@@ -4,9 +4,66 @@ import deepmerge from "deepmerge";
 
 import type { AppOpenAPI } from "@/types/hono";
 
+import env from "@/env";
+
 import packageJSON from "../../package.json" with { type: "json" };
 import { auth } from "./auth";
 
+const TAGS = [
+  {
+    name: "Auth",
+    description: "App using cokkie authentication",
+  },
+  {
+    name: "Session Management",
+    description: "Session management related operations",
+  },
+  {
+    name: "Password Management",
+    description: "Password management related operations",
+  },
+  {
+    name: "Account Management",
+    description: "Account management related operations",
+  },
+];
+
+const PATH_CONFIG: Record<string, PathConfig> = {
+  // Auth
+  "/sign-up/email": { tags: ["Auth"] },
+  "/verify-email": { tags: ["Auth"] },
+  "/send-verification-email": { tags: ["Auth"] },
+  "/sign-in/email": { tags: ["Auth"] },
+  "/sign-in/social": { tags: ["Auth"] },
+  "/sign-out": { tags: ["Auth"] },
+
+  // Session Management
+  "/get-session": { tags: ["Session Management"] },
+  "/refresh-token": { tags: ["Session Management"] },
+  "/list-sessions": { tags: ["Session Management"] },
+  "/revoke-session": { tags: ["Session Management"] },
+  "/revoke-sessions": { tags: ["Session Management"] },
+  "/revoke-other-sessions": { tags: ["Session Management"] },
+
+  // Password Management
+  "/forget-password": { tags: ["Password Management"] },
+  "/reset-password": { tags: ["Password Management"] },
+  "/reset-password/{token}": { tags: ["Password Management"] },
+
+  // Account Management
+  "/change-email": { tags: ["Account Management"] },
+  "/change-password": { tags: ["Account Management"] },
+  "/update-user": { tags: ["Account Management"] },
+  "/delete-user": { tags: ["Account Management"] },
+  "/list-accounts": { tags: ["Account Management"] },
+  "/unlink-account": { tags: ["Account Management"] },
+  "/link-social": { tags: ["Account Management"] },
+
+  // Excluded
+  "/delete-user/callback": { exclude: true },
+  "/ok": { exclude: true },
+  "/error": { exclude: true },
+};
 interface PathConfig {
   tags?: string[];
   exclude?: boolean;
@@ -15,17 +72,9 @@ interface PathConfig {
 function processAuthOpenAPISchema(openAPISchema: any, pathConfigurations: Record<string, PathConfig>) {
   const newPaths: Record<string, any> = {};
   const tags: Record<string, { name: string; description: string }> = {};
-  const orderedTags: string[] = [
-    "Registration",
-    "Auth & Sessions",
-    "Password Management",
-    "Account Management",
-    "Accounts", // Keep "Accounts" as it was
-  ];
 
   for (const path in openAPISchema.paths) {
     const config = pathConfigurations[path];
-
     if (config?.exclude) {
       continue; // Skip excluded paths
     }
@@ -39,7 +88,7 @@ function processAuthOpenAPISchema(openAPISchema: any, pathConfigurations: Record
         methodDetails.tags = assignedTags;
         assignedTags.forEach((tag) => {
           if (!tags[tag]) {
-            tags[tag] = { name: tag, description: `${tag} related operations` };
+            tags[tag] = { name: tag, description: TAGS.find(t => t.name === tag)?.description || "" };
           }
         });
       }
@@ -49,23 +98,33 @@ function processAuthOpenAPISchema(openAPISchema: any, pathConfigurations: Record
   }
 
   openAPISchema.paths = newPaths;
-  // Order the tags based on the orderedTags array
-  openAPISchema.tags = orderedTags
-    .map(tagName => tags[tagName])
-    .filter(tag => !!tag); // Filter out any tags that might not have been used
-  openAPISchema.servers = []; // Remove auth server URLs as they are now under /api/auth
+  openAPISchema.tags = TAGS
+    .map(t => tags[t.name])
+    .filter(t => !!t);
 
   return openAPISchema;
 }
 
 export default function configureOpenAPI(app: AppOpenAPI) {
   app.get("/openapi", async (c) => {
+    const servers = [];
+    if (env.NODE_ENV === "development") {
+      servers.push({
+        url: "https://localhost:9999",
+      });
+    }
+    servers.push(
+      {
+        url: "http://vezhdelit.com",
+      },
+    );
+
     const openAPISchema = app.getOpenAPI31Document({
       openapi: "3.0.0",
       info: {
         version: packageJSON.version,
-        title: "Tasks API",
-        description: "API for managing tasks",
+        title: "Price radar API",
+        description: "API for tracking prices of products from product url",
         contact: {
           name: "Your Name",
           email: "",
@@ -76,56 +135,14 @@ export default function configureOpenAPI(app: AppOpenAPI) {
         },
         termsOfService: "https://example.com/terms",
       },
-      servers: [
-        {
-          url: "http://vezhdelit.com",
-        },
-        {
-          url: "http://localhost:9999",
-        },
-      ],
+      servers,
     });
 
     let authOpenAPISchema = await auth.api.generateOpenAPISchema();
 
-    const pathConfigurations: Record<string, PathConfig> = {
-      // Registration
-      "/sign-up/email": { tags: ["Registration"] },
-      "/verify-email": { tags: ["Registration"] },
-      "/send-verification-email": { tags: ["Registration"] },
-
-      // Auth & Sessions
-      "/sign-in/email": { tags: ["Auth & Sessions"] },
-      "/sign-in/social": { tags: ["Auth & Sessions"] },
-      "/get-session": { tags: ["Auth & Sessions"] },
-      "/refresh-token": { tags: ["Auth & Sessions"] },
-      "/list-sessions": { tags: ["Auth & Sessions"] },
-      "/revoke-session": { tags: ["Auth & Sessions"] },
-      "/revoke-sessions": { tags: ["Auth & Sessions"] },
-      "/revoke-other-sessions": { tags: ["Auth & Sessions"] },
-      "/sign-out": { tags: ["Auth & Sessions"] },
-
-      // Password Management
-      "/forget-password": { tags: ["Password Management"] },
-      "/reset-password": { tags: ["Password Management"] },
-      "/reset-password/{token}": { tags: ["Password Management"] },
-
-      // Account Management
-      "/change-email": { tags: ["Account Management"] },
-      "/change-password": { tags: ["Account Management"] },
-      "/update-user": { tags: ["Account Management"] },
-      "/delete-user": { tags: ["Account Management"] },
-      "/list-accounts": { tags: ["Account Management"] },
-      "/unlink-account": { tags: ["Account Management"] },
-      "/link-social": { tags: ["Account Management"] },
-
-      // Excluded
-      "/delete-user/callback": { exclude: true },
-      "/ok": { exclude: true },
-      "/error": { exclude: true },
-    };
-
-    authOpenAPISchema = processAuthOpenAPISchema(authOpenAPISchema, pathConfigurations);
+    authOpenAPISchema = processAuthOpenAPISchema(authOpenAPISchema, PATH_CONFIG);
+    authOpenAPISchema.servers = [];
+    delete (authOpenAPISchema.components as any).securitySchemes;
 
     const mergedOpenAPISchema = deepmerge(authOpenAPISchema, openAPISchema);
 
