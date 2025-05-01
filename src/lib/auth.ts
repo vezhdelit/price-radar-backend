@@ -6,7 +6,7 @@ import db from "@/db";
 import env from "@/env";
 
 export const auth = betterAuth({
-  trustedOrigins: ["http://localhost:5173", "http://vezhdelit@gmail.com"], // Add your trusted origins here
+  trustedOrigins: ["http://localhost:5173", "https://backend.vezhdelit.com"], // Add your trusted origins here
   database: drizzleAdapter(db, {
     provider: "pg", // or "mysql", "sqlite"
     usePlural: true,

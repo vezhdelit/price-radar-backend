@@ -6,7 +6,7 @@ import { createRouter } from "@/lib/create-app";
 const router = createRouter().use(
   "/api/auth/*", // or replace with "*" to enable cors for all routes
   cors({
-    origin: ["http://localhost:5173", "http://vezhdelit@gmail.com"], // replace with your origin
+    origin: ["http://localhost:5173", "https://backend.vezhdelit.com"], // replace with your origin
     allowHeaders: ["Origin", "Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
