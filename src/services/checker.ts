@@ -20,10 +20,12 @@ type Check = z.infer<typeof selectChecksSchema>;
 
 export async function checkProduct(product_id: string, url: string): Promise<FuncResult<Check>> {
   try {
+    console.warn("Checking product:", product_id, url);
     const response = await axios.get(url);
+    console.warn("Fetched product page:", url);
     const html = response.data;
     const $ = cheerio.load(html);
-
+    console.warn("Loaded HTML with cheerio");
     const scriptData = parseCheerioScriptData($);
     const jsonLdData = parseCheerioJsonLdData($);
     const metaData = parseCheerioMetaData($);
