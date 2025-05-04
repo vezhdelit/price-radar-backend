@@ -13,3 +13,5 @@ export interface ScrapedProductData {
   price: number;
   currency: string;
 }
+
+export type PartialScrapedProductData = Partial<ScrapedProductData>;

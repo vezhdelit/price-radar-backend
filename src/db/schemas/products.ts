@@ -33,7 +33,7 @@ export const insertProductsSchema = createInsertSchema(
   products,
   {
     title: schema => schema.min(1).max(100),
-    url: schema => schema.min(1).max(500),
+    url: schema => schema.min(1).max(1000),
     description: schema => schema.max(5000),
     price: schema => schema.min(0),
     currency: schema => schema.length(3),

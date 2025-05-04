@@ -50,9 +50,12 @@ export function getStagehand({
   const stagehandConfig: StagehandConstructorParams = {
     env: "LOCAL",
     verbose: 1,
-    enableCaching: true,
+    enableCaching: false,
     localBrowserLaunchOptions: {
       headless: HEADLESS,
+      acceptDownloads: false,
+      viewport: { width: 1280, height: 720 },
+      deviceScaleFactor: 1,
     },
   };
   if (browserType === "configured") {

@@ -7,5 +7,8 @@ const router = createRouter();
 
 router.openapi(routes.test, handlers.test);
 router.openapi(routes.webscrapeProduct, handlers.webscrapeProduct);
+router.openapi(routes.parseProductJsonLd, handlers.parseProductJsonLd);
+router.openapi(routes.parseProductScripts, handlers.parseProductScripts);
+router.openapi(routes.parseProductMeta, handlers.parseProductMeta);
 
 export default router;

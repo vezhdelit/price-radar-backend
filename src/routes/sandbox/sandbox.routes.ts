@@ -47,5 +47,85 @@ export const webscrapeProduct = createRoute({
   },
   hide: env.NODE_ENV !== "development",
 });
-
 export type WebscrapeProductRoute = typeof webscrapeProduct;
+
+export const parseProductJsonLd = createRoute({
+  path: "/api/sandbox/product/jsonld",
+  method: "get",
+  tags,
+  request: {
+    query: z.object({
+      url: z.string().describe("The URL of the product to get json-ld").openapi({
+        example: "https://jabko.ua/rus/product/gejmpad-playstation-5-dualsense",
+      }),
+    }),
+  },
+  responses: {
+    [HTTP_STATUS_CODES.OK]: jsonContent(
+      scrapedProductSchema.partial(),
+      "Sandbox test route",
+    ),
+    [HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({
+        message: z.string().describe("The error message"),
+      }),
+      "Error scraping product data",
+    ),
+  },
+  hide: env.NODE_ENV !== "development",
+});
+export type ParseProductJsonLdRoute = typeof parseProductJsonLd;
+
+export const parseProductScripts = createRoute({
+  path: "/api/sandbox/product/scripts",
+  method: "get",
+  tags,
+  request: {
+    query: z.object({
+      url: z.string().describe("The URL of the product to get data from its scripts").openapi({
+        example: "https://jabko.ua/rus/product/gejmpad-playstation-5-dualsense",
+      }),
+    }),
+  },
+  responses: {
+    [HTTP_STATUS_CODES.OK]: jsonContent(
+      scrapedProductSchema.partial(),
+      "Sandbox test route",
+    ),
+    [HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({
+        message: z.string().describe("The error message"),
+      }),
+      "Error scraping product data",
+    ),
+  },
+  hide: env.NODE_ENV !== "development",
+});
+export type ParseProductScriptsRoute = typeof parseProductScripts;
+
+export const parseProductMeta = createRoute({
+  path: "/api/sandbox/product/meta",
+  method: "get",
+  tags,
+  request: {
+    query: z.object({
+      url: z.string().describe("The URL of the product to get data from its meta tags").openapi({
+        example: "https://jabko.ua/rus/product/gejmpad-playstation-5-dualsense",
+      }),
+    }),
+  },
+  responses: {
+    [HTTP_STATUS_CODES.OK]: jsonContent(
+      scrapedProductSchema.partial(),
+      "Sandbox test route",
+    ),
+    [HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({
+        message: z.string().describe("The error message"),
+      }),
+      "Error scraping product data",
+    ),
+  },
+  hide: env.NODE_ENV !== "development",
+});
+export type ParseProductMetaRoute = typeof parseProductMeta;
