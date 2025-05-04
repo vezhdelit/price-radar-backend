@@ -1,68 +1,37 @@
-import { z } from "zod";
+// functions.ts
+import type { z } from "zod";
 
 import type { FuncResult } from "@/types/func";
 
-import { CURRENCY_CHAR_TO_CODE } from "@/constants/currencies";
 import db from "@/db";
 import { checks, type insertCheckssSchema, type selectChecksSchema } from "@/db/schemas";
-import { getStagehand } from "@/lib/stagehand";
+
+import { scrapeProductData } from "./webscraper";
 
 type NewCheck = z.infer<typeof insertCheckssSchema>;
 type Check = z.infer<typeof selectChecksSchema>;
 
 export async function checkProduct(product_id: string, url: string): Promise<FuncResult<Check>> {
-  const stagehand = getStagehand();
-  if (!stagehand) {
-    return {
-      data: null,
-      error: new Error("Stagehand not initialized"),
-    };
-  }
-
   try {
-    await stagehand.init();
-    const page = stagehand.page;
-    await page.goto(url);
-    const { image_url, name, price, currency } = await page.extract({
-      instruction:
-        "Extract the image_url, name, price and currency of the product from the page. Be sure to get discount price if product is on discount.",
-      schema: z.object({
-        image_url: z.string().optional().nullable().describe("The URL of the product image"),
-        name: z.string().describe("The name of the product"),
-        price: z.number().describe("The price of the product"),
-        currency: z.string().describe("The currency of the price"),
-      }),
-    });
-
-    await page.close();
-    await stagehand.close();
-
-    let currencyCode = currency;
-    if (currencyCode.length !== 3) {
-      const code = CURRENCY_CHAR_TO_CODE[currencyCode as keyof typeof CURRENCY_CHAR_TO_CODE];
-      if (!code) {
-        return {
-          data: null,
-          error: new Error("Currency not supported"),
-        };
-      }
-      currencyCode = code;
-    }
-    const intPrice = Math.round(price);
-
-    const checkObj: NewCheck = {
-      title: name,
-      productId: product_id,
-      imageUrl: image_url,
-      price: intPrice,
-      currency: currencyCode,
-    };
-
-    const { data: check, error } = await createCheck(checkObj);
-    if (error) {
+    const { data: scrapedData, error: scrapeError } = await scrapeProductData(url);
+    if (scrapeError) {
       return {
         data: null,
-        error,
+        error: scrapeError,
+      };
+    }
+
+    const { data: check, error: checkCreationError } = await createCheck({
+      title: scrapedData.title,
+      productId: product_id,
+      imageUrl: scrapedData.imageUrl,
+      price: scrapedData.price,
+      currency: scrapedData.currency,
+    });
+    if (checkCreationError) {
+      return {
+        data: null,
+        error: checkCreationError,
       };
     }
 

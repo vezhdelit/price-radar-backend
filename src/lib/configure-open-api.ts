@@ -110,7 +110,7 @@ export default function configureOpenAPI(app: AppOpenAPI) {
     const servers = [];
     if (env.NODE_ENV === "development") {
       servers.push({
-        url: "https://localhost:9999",
+        url: "http://localhost:9999",
       });
     }
     servers.push(

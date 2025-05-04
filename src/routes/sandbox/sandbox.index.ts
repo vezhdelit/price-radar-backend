@@ -6,5 +6,6 @@ import * as routes from "./sandbox.routes";
 const router = createRouter();
 
 router.openapi(routes.test, handlers.test);
+router.openapi(routes.webscrapeProduct, handlers.webscrapeProduct);
 
 export default router;
