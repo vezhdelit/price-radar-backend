@@ -9,6 +9,7 @@ import type { PartialScrapedProductData } from "@/types/products";
 
 import db from "@/db";
 import { checks, type insertCheckssSchema, type selectChecksSchema } from "@/db/schemas";
+import env from "@/env";
 
 import { parseCheerioJsonLdData } from "./jsonld";
 import { parseCheerioMetaData } from "./meta";
@@ -21,18 +22,24 @@ type Check = z.infer<typeof selectChecksSchema>;
 export async function checkProduct(product_id: string, url: string): Promise<FuncResult<Check>> {
   try {
     console.warn("Checking product:", product_id, url);
-    const response = await axios.get(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Referer": "https://google.com",
+    // const response = await axios.get(url, {
+    //   headers: {
+    //     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    //     "Accept-Language": "en-US,en;q=0.9",
+    //     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    //     "Referer": "https://google.com",
+    //   },
+    // });
+
+    const response = await axios.get(`${env.PYTHON_WEBSCRAPER_BASE_URL}/get_html/raw`, {
+      params: {
+        url,
       },
     });
-    console.warn("Fetched product page:", url);
+
     const html = response.data;
     const $ = cheerio.load(html);
-    console.warn("Loaded HTML with cheerio");
+
     const scriptData = parseCheerioScriptData($);
     const jsonLdData = parseCheerioJsonLdData($);
     const metaData = parseCheerioMetaData($);
