@@ -23,6 +23,22 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
     ...product,
     userId: user.id,
   };
+
+  const [existing] = await db.select().from(products).where(
+    and(
+      eq(products.userId, user.id),
+      eq(products.url, productToInsert.url),
+    ),
+  ).limit(1);
+  if (existing) {
+    return c.json(
+      {
+        message: "Product already exists",
+      },
+      HTTP_STATUS_CODES.CONFLICT,
+    );
+  }
+
   const [inserted] = await db.insert(products).values(productToInsert).returning();
 
   const { data: check, error } = await checkProduct(inserted.id, inserted.url);

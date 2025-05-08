@@ -8,7 +8,7 @@ import { products } from "./products";
 
 export const checks = pgTable("checks", {
   id: text("id").primaryKey().notNull().$defaultFn(() => generateRandomDomainId("chk")),
-  productId: text("product_id").notNull().references(() => products.id),
+  productId: text("product_id").notNull().references(() => products.id, { onDelete: "cascade" }),
   price: integer("price").notNull(),
   title: text("title").notNull(),
   currency: text("currency").notNull(),

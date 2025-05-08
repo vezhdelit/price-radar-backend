@@ -38,6 +38,12 @@ export const create = createRoute({
       }),
       "The created product",
     ),
+    [HTTP_STATUS_CODES.CONFLICT]: jsonContent(
+      z.object({
+        message: z.string().describe("The error message"),
+      }),
+      "Product already exists",
+    ),
     [HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(insertProductsSchema),
       "The validation error(s)",
