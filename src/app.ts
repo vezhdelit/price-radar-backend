@@ -5,7 +5,7 @@ import cron from "@/routes/cron/cron.index";
 import index from "@/routes/index/index.index";
 import products from "@/routes/products/products.index";
 import sandbox from "@/routes/sandbox/sandbox.index";
-import webhooks from "@/routes/webhooks/webhooks.index";
+import webhook from "@/routes/webhook/webhook.index";
 
 const app = createApp();
 
@@ -15,7 +15,7 @@ const routes = [
   auth,
   index,
   sandbox,
-  webhooks,
+  webhook,
   cron,
   products,
 ] as const;

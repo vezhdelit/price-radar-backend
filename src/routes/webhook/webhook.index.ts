@@ -1,7 +1,7 @@
 import { createRouter } from "@/lib/create-app";
 
-import * as handlers from "./webhooks.handlers";
-import * as routes from "./webhooks.routes";
+import * as handlers from "./webhook.handlers";
+import * as routes from "./webhook.routes";
 
 const router = createRouter();
 

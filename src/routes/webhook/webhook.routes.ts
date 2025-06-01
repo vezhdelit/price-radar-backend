@@ -23,7 +23,7 @@ export const scrapedHtmlWebhook = createRoute({
       "WebhookResponse",
     ),
   },
-  hide: env.NODE_ENV !== "development",
+  // hide: env.NODE_ENV !== "development",
 });
 
 export type ScrapedHtmlWebhookRoute = typeof scrapedHtmlWebhook;
